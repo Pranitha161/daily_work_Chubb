@@ -3,8 +3,11 @@ package com.example.demo.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -27,7 +30,14 @@ public class QuestionService {
         }
         return new ResponseEntity<>(new ArrayList<>(), HttpStatus.BAD_REQUEST);
     }
+    public List<Integer> getQuestionsForQuiz(String categoryName, Integer numQuestions) {
 
+        Pageable limit = PageRequest.of(0, numQuestions);
+
+        List<Question> questions = questionDao.findRandomQuestionsByCategory(categoryName, limit);
+
+        return questions.stream().map(Question::getId).collect(Collectors.toList());
+    }
     public ResponseEntity<List<Question>> getQuestionsByCategory(String category) {
         try {
             return new ResponseEntity<>(questionDao.findByCategory(category),HttpStatus.OK);
