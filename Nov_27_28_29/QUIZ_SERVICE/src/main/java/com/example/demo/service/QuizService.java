@@ -13,16 +13,18 @@ import com.example.demo.entity.Response;
 import com.example.demo.feign.QuizInterface;
 import com.example.demo.repository.QuizRepository;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+
 @Service
 public class QuizService {
-
+	
     @Autowired
     QuizRepository quizDao;
-
+    
     @Autowired
     QuizInterface quizInterface;
 
-
+    @CircuitBreaker(name = "questionServiceCircuitBreaker", fallbackMethod = "fallbackQuestions")
     public ResponseEntity<String> createQuiz(String category, int numQ, String title) {
 
         List<Integer> questions = quizInterface.getQuestionsForQuiz(category, numQ).getBody();
