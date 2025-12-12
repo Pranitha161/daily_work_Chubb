@@ -37,4 +37,7 @@ public class AirLineFileService {
                     return repository.save(file);
                 }));
     }
+    public Mono<AirLineFile> addAirline(AirLineFile airLineFile) {
+        return repository.save(airLineFile);
+    }
 }
